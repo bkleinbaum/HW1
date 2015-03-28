@@ -8,118 +8,65 @@
     maxZoom: 18
 }).addTo(map);
   
-  // Create Borough Layers
+
+$("#text").hide();
+
+$.getJSON('https://bk741.cartodb.com/api/v2/sql?q=select distinct(borough)%20from%20graffiti_information_2015', function(data) {
+ 
+  	$.each(data.rows, function() {
+  	$('#boroughs').append(
+		"<input type = 'submit' class = 'borough, two columns' value='"
+		+ this.borough
+		+ "'>" 
+		+"</input>");
+ 
+});
+
+});
+var geoJsonLayer = L.geoJson(null).addTo(map);
+
+  var id;
+  $(document).on("click", "input", function (event) {
+      //should not not var here, using var here will declare the variable id as a local variable in the handler function scope
+      id = $(this).attr('value') || '';
+      $("#text").show();
+      	$('#name').prev().remove('span')
+	$("#name").before('<span>'+id+'</span>');
+      console.log(id);
+	geoJsonLayer.clearLayers();
+
+    $.getJSON(based+id+dend, function(data) {
+  	$.each(data.rows, function(key, val) {
+  	$('#district').append($("<li></li>")).text(this.count);
+  	
+	 $.getJSON(base+id+gend)
+	  	// When it's done, add the results to the map
+	    .done(function (data) {
+	      geoJsonLayer.addData(data)   
+	    });
+	});
+  	});
+
+});
+
+  $(function () {
+      $(".borough").click(function (e) {
+          console.log(id);
+      
+	});
+	});
+
+
+var based =  'https://bk741.cartodb.com/api/v2/sql?q=select%20count(borough)%20from%20graffiti_information_2015%20where%20borough%20in%20(%27'
+var dend = '%27)'
 
 var base = 'https://bk741.cartodb.com/api/v2/sql?q=select*from%20graffiti_information_2015%20where%20borough%20in%20(%27'
 var gend = '%27)&format=GeoJson'
 
 
-var Manhattan = new L.GeoJSON.AJAX(base+"MANHATTAN"+gend);
-var Bronx = new L.GeoJSON.AJAX(base+"BRONX"+gend);
-var Brooklyn = new L.GeoJSON.AJAX(base+"BROOKLYN"+gend);
-var Queens = new L.GeoJSON.AJAX(base+"QUEENS"+gend);
-var statenIsland = new L.GeoJSON.AJAX(base+"STATEN ISLAND"+gend);
-
-// //create data
-
-var based =  'https://bk741.cartodb.com/api/v2/sql?q=select%20count(borough)%20from%20graffiti_information_2015%20where%20borough%20in%20(%27'
-var dend = '%27)'
-
-// var Man =  $.getJSON(based+"MANHATTAN"+dend)
-
-
-//add data
-
-$("#text").hide();
-
-$("#Man").click(function(){
-	map.addLayer(Manhattan);
-	map.removeLayer(Bronx);
-	map.removeLayer(Brooklyn);
-	map.removeLayer(Queens);
-	map.removeLayer(statenIsland);
-	$("#text").show();
-	$('#borough').prev().remove('span')
-	$("#borough").before('<span>Manhattan</span>');
-	$.getJSON(based+"MANHATTAN"+dend, function(data) {
-  	$.each(data.rows, function(key, val) {
-  	$('#district').append($("<li></li>")).text(this.count)
-	});
-
-});
 
 
 
-});
 
-$("#BX").click(function(){
-	map.addLayer(Bronx);
-	map.removeLayer(Manhattan);
-	map.removeLayer(Brooklyn);
-	map.removeLayer(Queens);
-	map.removeLayer(statenIsland);
-	$("#text").show();
-	$('#borough').prev().remove('span')
-	$("#borough").before('<span>the Bronx</span>');
-	$.getJSON(based+"BRONX"+dend, function(data) {
-  	$.each(data.rows, function(key, val) {
-  	$('#district').append($("<li></li>")).text(this.count)
-	});
 
-});
-});
-
-$("#BK").click(function(){
-	map.addLayer(Brooklyn);
-	map.removeLayer(Manhattan);
-	map.removeLayer(Bronx);
-	map.removeLayer(Queens);
-	map.removeLayer(statenIsland);
-	$("#text").show();
-	$('#borough').prev().remove('span')
-	$("#borough").before('<span>Brooklyn</span>');
-	$.getJSON(based+"BROOKLYN"+dend, function(data) {
-  	$.each(data.rows, function(key, val) {
-  	$('#district').append($("<li></li>")).text(this.count)
-	});
-
-});
-
-});
-
-$("#QN").click(function(){
-	map.addLayer(Queens);
-	map.removeLayer(Manhattan);
-	map.removeLayer(Brooklyn);
-	map.removeLayer(Bronx);
-	map.removeLayer(statenIsland);
-	$("#text").show();
-	$('#borough').prev().remove('span')
-	$("#borough").before('<span>Queens</span>');
-	$.getJSON(based+"QUEENS"+dend, function(data) {
-  	$.each(data.rows, function(key, val) {
-  	$('#district').append($("<li></li>")).text(this.count)
-	});
-
-});
-
-});
-
-$("#SI").click(function(){
-	map.addLayer(statenIsland);
-	map.removeLayer(Manhattan);
-	map.removeLayer(Brooklyn);
-	map.removeLayer(Bronx);
-	map.removeLayer(Queens);
-	$("#text").show();
-	$('#borough').prev().remove('span')
-	$("#borough").before('<span>Staten Island</span>');
-	$.getJSON(based+"STATEN ISLAND"+dend, function(data) {
-  	$.each(data.rows, function(key, val) {
-  	$('#district').append($("<li></li>")).text(this.count)
-	});
-
-});
-
-});
 
